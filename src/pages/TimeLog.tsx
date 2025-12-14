@@ -67,15 +67,6 @@ export default function TimeLog() {
     setIsFormOpen(true);
   };
 
-  const [isMobile, setIsMobile] = React.useState(false);
-
-  React.useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
   return (
     <div className="timelog-page">
       {/* Desktop Header */}
