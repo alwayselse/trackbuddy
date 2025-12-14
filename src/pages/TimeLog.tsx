@@ -62,21 +62,12 @@ export default function TimeLog() {
   return (
     <div className="timelog-page">
       <div className="page-header">
-        <div>
-          <h1>Time Log</h1>
-          <p className="subtitle">Track your daily progress</p>
-        </div>
-        <button 
-          className="btn btn-primary"
-          onClick={handleQuickLog}
-        >
-          <Plus size={20} />
-          Quick Log
-        </button>
+        <h1>Time Log</h1>
+        <p className="subtitle">Track your daily progress</p>
       </div>
 
-      {/* Date Selector & Stats */}
-      <div className="timelog-controls card">
+      {/* Compact Date Bar */}
+      <div className="timelog-controls">
         <div className="date-selector">
           <label htmlFor="dateFilter">Select Date:</label>
           <input
@@ -88,17 +79,21 @@ export default function TimeLog() {
           />
         </div>
         <div className="day-summary">
-          <Clock size={20} />
+          <Clock size={18} />
           <span className="summary-text">
-            <strong>{totalHours.toFixed(1)} hours</strong> logged on{' '}
-            {new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-US', { 
-              month: 'long', 
-              day: 'numeric', 
-              year: 'numeric' 
-            })}
+            <strong>{totalHours.toFixed(1)}</strong> hrs
           </span>
         </div>
       </div>
+
+      {/* Floating Action Button */}
+      <button 
+        className="fab"
+        onClick={handleQuickLog}
+        aria-label="Add time log"
+      >
+        <Plus size={24} />
+      </button>
 
       {/* Time Log Form Modal */}
       {isFormOpen && (
