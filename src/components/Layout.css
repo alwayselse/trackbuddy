@@ -90,7 +90,11 @@
 /* Mobile styles - Bottom Navigation */
 @media (max-width: 768px) {
   .layout {
-    padding-bottom: 88px;
+    padding-bottom: 72px;
+  }
+  
+  .main {
+    padding: 0;
   }
 
   .header {
@@ -124,14 +128,15 @@
     left: 0;
     right: 0;
     top: auto;
-    background: var(--bg-secondary);
-    border-top: 1px solid var(--border);
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
     flex-direction: row;
     padding: 0;
-    box-shadow: 0 -2px 12px var(--shadow);
+    box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.05), 0 -8px 24px rgba(0, 0, 0, 0.4);
     display: flex !important;
     justify-content: space-around;
-    height: 76px;
+    height: 72px;
     z-index: 1000;
   }
 
@@ -141,38 +146,40 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 10px 8px;
+    gap: 4px;
+    padding: 8px;
     border-radius: 0;
-    font-size: 0.6875rem;
-    font-weight: 700;
+    font-size: 0.625rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
-    min-height: 76px;
+    letter-spacing: 0.05em;
+    min-height: 72px;
     position: relative;
-    color: var(--text-tertiary);
+    color: rgba(148, 163, 184, 0.7);
+    transition: all 0.2s ease;
   }
 
   .nav-link svg {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
     stroke-width: 2;
+    transition: all 0.2s ease;
   }
 
   .nav-link:hover {
     background: transparent;
     transform: none;
-    color: var(--text-secondary);
+    color: rgba(148, 163, 184, 1);
   }
 
   .nav-link.active {
     background: transparent;
-    color: var(--primary-light);
+    color: var(--primary);
     box-shadow: none;
   }
 
   .nav-link.active svg {
-    filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.5));
+    transform: scale(1.1);
   }
 
   .nav-link.active::before {
@@ -181,11 +188,11 @@
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 40px;
+    width: 32px;
     height: 3px;
-    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+    background: var(--primary);
     border-radius: 0 0 3px 3px;
-    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.5);
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.8);
   }
 
   .main {
