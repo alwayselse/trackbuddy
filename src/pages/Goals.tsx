@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { goalService } from '@/services/goalService';
 import { Goal, NewGoal, GoalCategory } from '@/types';
@@ -8,8 +8,15 @@ import './Goals.css';
 export default function Goals() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const goals = useLiveQuery(() => goalService.getAll(), []);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -62,22 +69,42 @@ export default function Goals() {
 
   return (
     <div className="goals-page">
-      <div className="page-header">
-        <div>
+      {isMobile ? (
+        <div className="mobile-page-title">
           <h1>Goals</h1>
-          <p className="subtitle">Manage your learning, project, and income goals</p>
         </div>
+      ) : (
+        <div className="page-header">
+          <div>
+            <h1>Goals</h1>
+            <p className="subtitle">Manage your learning, project, and income goals</p>
+          </div>
+          <button 
+            className="btn btn-primary"
+            onClick={() => {
+              setEditingGoal(null);
+              setIsFormOpen(true);
+            }}
+          >
+            <Plus size={20} />
+            New Goal
+          </button>
+        </div>
+      )}
+
+      {/* Mobile FAB */}
+      {isMobile && (
         <button 
-          className="btn btn-primary"
+          className="mobile-fab"
           onClick={() => {
             setEditingGoal(null);
             setIsFormOpen(true);
           }}
+          aria-label="Add Goal"
         >
-          <Plus size={20} />
-          New Goal
+          <Plus size={24} />
         </button>
-      </div>
+      )}
 
       {/* Goal Form Modal */}
       {isFormOpen && (
