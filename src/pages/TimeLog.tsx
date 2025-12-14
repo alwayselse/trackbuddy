@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { goalService } from '@/services/goalService';
 import { timeLogService } from '@/services/timeLogService';
@@ -10,6 +10,14 @@ export default function TimeLog() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingLog, setEditingLog] = useState<TimeLog | null>(null);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const activeGoals = useLiveQuery(() => goalService.getActive(), []);
   const timeLogs = useLiveQuery(() => timeLogService.getAll(), []);
@@ -59,41 +67,95 @@ export default function TimeLog() {
     setIsFormOpen(true);
   };
 
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <div className="timelog-page">
-      <div className="page-header">
-        <h1>Time Log</h1>
-        <p className="subtitle">Track your daily progress</p>
-      </div>
+      {/* Desktop Header */}
+      {!isMobile && (
+        <div className="page-header">
+          <div>
+            <h1>Time Log</h1>
+            <p className="subtitle">Track your daily progress</p>
+          </div>
+          <button 
+            className="btn btn-primary"
+            onClick={handleQuickLog}
+          >
+            <Plus size={20} />
+            Quick Log
+          </button>
+        </div>
+      )}
 
-      {/* Compact Date Bar */}
-      <div className="timelog-controls">
-        <div className="date-selector">
-          <label htmlFor="dateFilter">Select Date:</label>
+      {/* Mobile-Only: Compact Title */}
+      {isMobile && (
+        <div className="mobile-page-title">
+          <h1>Time Log</h1>
+        </div>
+      )}
+
+      {/* Mobile-Only: Date Bar */}
+      {isMobile && (
+        <div className="mobile-date-bar">
           <input
             type="date"
-            id="dateFilter"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
             max={new Date().toISOString().split('T')[0]}
+            className="mobile-date-input"
           />
+          <div className="mobile-hours-badge">
+            <Clock size={16} />
+            <span><strong>{totalHours.toFixed(1)}</strong> hrs</span>
+          </div>
         </div>
-        <div className="day-summary">
-          <Clock size={18} />
-          <span className="summary-text">
-            <strong>{totalHours.toFixed(1)}</strong> hrs
-          </span>
-        </div>
-      </div>
+      )}
 
-      {/* Floating Action Button */}
-      <button 
-        className="fab"
-        onClick={handleQuickLog}
-        aria-label="Add time log"
-      >
-        <Plus size={24} />
-      </button>
+      {/* Desktop: Controls Card */}
+      {!isMobile && (
+        <div className="timelog-controls card">
+          <div className="date-selector">
+            <label htmlFor="dateFilter">Select Date:</label>
+            <input
+              type="date"
+              id="dateFilter"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              max={new Date().toISOString().split('T')[0]}
+            />
+          </div>
+          <div className="day-summary">
+            <Clock size={20} />
+            <span className="summary-text">
+              <strong>{totalHours.toFixed(1)} hours</strong> logged on{' '}
+              {new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-US', { 
+                month: 'long', 
+                day: 'numeric', 
+                year: 'numeric' 
+              })}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile-Only: FAB */}
+      {isMobile && (
+        <button 
+          className="mobile-fab"
+          onClick={handleQuickLog}
+          aria-label="Add time log"
+        >
+          <Plus size={24} />
+        </button>
+      )}
 
       {/* Time Log Form Modal */}
       {isFormOpen && (

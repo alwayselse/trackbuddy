@@ -1,12 +1,7 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { 
-  Target, 
-  Clock, 
-  TrendingUp, 
-  Menu, 
-  X 
-} from 'lucide-react';
+import { Target, Clock, TrendingUp } from 'lucide-react';
+import MobileBottomNav from './MobileBottomNav';
 import './Layout.css';
 
 interface LayoutProps {
@@ -14,7 +9,17 @@ interface LayoutProps {
 }
 
 export default function Layout({ children }: LayoutProps) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const navItems = [
     { path: '/', icon: Clock, label: 'Time Log' },
@@ -22,6 +27,19 @@ export default function Layout({ children }: LayoutProps) {
     { path: '/progress', icon: TrendingUp, label: 'Progress' },
   ];
 
+  // Mobile Layout - No header, bottom nav only
+  if (isMobile) {
+    return (
+      <div className="mobile-layout">
+        <main className="mobile-main">
+          {children}
+        </main>
+        <MobileBottomNav />
+      </div>
+    );
+  }
+
+  // Desktop Layout - Full header with nav
   return (
     <div className="layout">
       <header className="header">
@@ -29,22 +47,13 @@ export default function Layout({ children }: LayoutProps) {
           <div className="header-left">
             <h1 className="logo">📊 TrackBuddy</h1>
           </div>
-          
-          <button 
-            className="mobile-menu-btn"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
 
-          <nav className={`nav ${isMobileMenuOpen ? 'nav-open' : ''}`}>
+          <nav className="nav">
             {navItems.map(({ path, icon: Icon, label }) => (
               <NavLink
                 key={path}
                 to={path}
                 className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-                onClick={() => setIsMobileMenuOpen(false)}
               >
                 <Icon size={20} />
                 <span>{label}</span>
