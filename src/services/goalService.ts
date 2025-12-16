@@ -24,7 +24,7 @@ export const goalService = {
 
   // Get active goals only
   async getActive(): Promise<Goal[]> {
-    return await db.goals.where('isActive').equals(1).toArray();
+    return await db.goals.filter(goal => goal.isActive === true).toArray();
   },
 
   // Get goal by ID
