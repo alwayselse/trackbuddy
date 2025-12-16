@@ -171,7 +171,7 @@ export default function Goals() {
                     id="startDate"
                     name="startDate"
                     required
-                    defaultValue={editingGoal?.startDate.split('T')[0]}
+                    defaultValue={editingGoal?.startDate.split('T')[0] || new Date().toISOString().split('T')[0]}
                   />
                 </div>
 
@@ -191,7 +191,7 @@ export default function Goals() {
                 <textarea
                   id="rules"
                   name="rules"
-                  defaultValue={editingGoal?.rules.join('\n')}
+                  defaultValue={editingGoal?.rules.join('\n') || ''}
                   placeholder="e.g.,&#10;Maintain digital notes&#10;Complete 1 project per month&#10;Publish articles regularly"
                   rows={5}
                 />
